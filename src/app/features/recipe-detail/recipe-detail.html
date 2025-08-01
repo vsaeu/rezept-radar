@@ -1,1 +1,74 @@
-<p>recipe-detail works!</p>
+<h2 *ngIf="!recipe">Recipe not found!</h2>
+
+<div *ngIf="recipe">
+  <h2 class="text-3xl">
+    {{ recipe.name }} <span *ngIf="recipe.rating">- {{ recipe.rating }} ★</span>
+  </h2>
+  <div class="mt-5 flex">
+    <img
+      [src]="recipe.imageUrl"
+      alt="{{ recipe.name }}"
+      *ngIf="recipe.imageUrl"
+      class="h-64 w-120 object-cover rounded-md"
+    />
+    <div *ngIf="!recipe.imageUrl" class="flex items-center justify-center h-64 w-120 bg-gray-200 rounded-md">
+      <p class="text-sm text-gray-500">No image available for this recipe.</p>
+    </div>
+  </div>
+
+  <section class="mt-2 text-sm">
+    <p *ngIf="recipe.description">{{ recipe.description }}</p>
+
+    <p *ngIf="recipe.dietTypes?.length">
+      Diet Types:
+      <span *ngFor="let diet of recipe.dietTypes">{{ diet }}, </span>
+    </p>
+    <p *ngIf="recipe.cuisineType">Cuisine Type: {{ recipe.cuisineType }}</p>
+    <p *ngIf="recipe.mealType">Meal Type: {{ recipe.mealType }}</p>
+
+    <div class="flex flex-col gap-2 mt-2">
+      <div class="flex gap-1">
+        <h3>Portion Size:</h3>
+        <p>{{ recipe.portionSize }}</p>
+      </div>
+      <div class="flex gap-1">
+        <h3>Preparation Time:</h3>
+        <p>{{ recipe.preparationTime }} minutes</p>
+      </div>
+      <div class="flex gap-1">
+        <h3>Cooking Time:</h3>
+        <p>{{ recipe.cookingTime }} minutes</p>
+      </div>
+      <div class="flex gap-1">
+        <h3>Total Time:</h3>
+        <p>{{ recipe.totalTime }} minutes</p>
+      </div>
+    </div>
+  </section>
+
+  <main class="flex gap-2 mt-2">
+    <section class="border rounded-md p-2">
+      <h3 class="text-xl font-semibold">Ingredients:</h3>
+      <ul class="ms-5 text-lg">
+        <li class="list-disc" *ngFor="let ingredient of recipe.ingredients | keyvalue">
+          {{ ingredient.key }}: {{ ingredient.value }}
+        </li>
+      </ul>
+    </section>
+
+    <section class="border rounded-md p-2">
+      <h3 class="text-xl font-semibold">Instructions:</h3>
+      <p class="text-lg">{{ recipe.instructions }}</p>
+    </section>
+  </main>
+
+  <section *ngIf="recipe.nutritionalInfo" class="mt-2">
+    <h3 class="text-md">Nutritional Information:</h3>
+    <ul class="list-disc ms-5 text-sm">
+      <li>Calories: {{ recipe.nutritionalInfo.calories }}</li>
+      <li>Protein: {{ recipe.nutritionalInfo.protein }} g</li>
+      <li>Carbohydrates: {{ recipe.nutritionalInfo.carbs }} g</li>
+      <li>Fat: {{ recipe.nutritionalInfo.fats }} g</li>
+    </ul>
+  </section>
+</div>
