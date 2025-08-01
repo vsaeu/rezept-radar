@@ -1,1 +1,105 @@
-<p>recipe-create works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-8 max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl">
+
+  <div>
+    <label class="block font-medium mb-1 text-gray-700">Recipe name</label>
+    <input formControlName="name" class="input border border-gray-300" required />
+  </div>
+
+  <div>
+    <label class="block font-medium mb-2 text-gray-700">Ingredients</label>
+    <div class="space-y-2">
+      <div
+        *ngFor="let group of ingredientsArray().controls; let i = index"
+        [formGroup]="group"
+        class="flex flex-wrap gap-2 items-center bg-gray-50 p-3 rounded border"
+      >
+        <select formControlName="name" class="input w-48">
+          <option *ngFor="let option of ingredientsList" [value]="option">{{ option }}</option>
+        </select>
+
+        <input
+          type="number"
+          formControlName="amount"
+          class="input w-24"
+          min="1"
+          placeholder="Amount"
+        />
+
+        <button type="button" (click)="removeIngredient(i)" class="text-red-600 hover:underline text-sm">Delete</button>
+      </div>
+    </div>
+
+    <button type="button" (click)="addIngredient()" class="btn-secondary mt-3">
+      + Add ingredient
+    </button>
+  </div>
+
+  <div>
+    <label class="block font-medium mb-1 text-gray-700">Preparation</label>
+    <textarea formControlName="instructions" class="input h-32 w-xl border border-gray-300" required></textarea>
+  </div>
+
+  <div>
+    <label class="block font-medium mb-1 text-gray-700">Image URL</label>
+    <input type="url" formControlName="imageUrl" class="input border border-gray-300" />
+  </div>
+
+  <!-- Time + Portions -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div>
+      <label class="block font-medium mb-1 text-gray-700">Portions</label>
+      <input type="number" formControlName="portionSize" class="input border border-gray-300" min="1" />
+    </div>
+    <div>
+      <label class="block font-medium mb-1 text-gray-700">Preparation time (min)</label>
+      <input type="number" formControlName="preparationTime" class="input border border-gray-300" min="0" />
+    </div>
+    <div>
+      <label class="block font-medium mb-1 text-gray-700">Cooking time (min)</label>
+      <input type="number" formControlName="cookingTime" class="input border border-gray-300" min="0" />
+    </div>
+  </div>
+
+  <fieldset formGroupName="nutritionalInfo" class="mt-4">
+    <legend class="block font-medium mb-2 text-gray-700">Nutritional info (optional)</legend>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <input type="number" formControlName="calories" placeholder="Calories" class="input border border-gray-300" />
+      <input type="number" formControlName="protein" placeholder="Protein (g)" class="input border border-gray-300" />
+      <input type="number" formControlName="carbs" placeholder="Carbohydrates (g)" class="input border border-gray-300" />
+      <input type="number" formControlName="fats" placeholder="Fat (g)" class="input border border-gray-300" />
+    </div>
+  </fieldset>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div>
+      <label class="block font-medium mb-1 text-gray-700">Diet type</label>
+      <select formControlName="dietTypes" multiple class="input h-28 border border-gray-300">
+        <option *ngFor="let d of dietTypes" [value]="d">{{ d }}</option>
+      </select>
+    </div>
+    <div>
+      <label class="block font-medium mb-1 text-gray-700">Cuisine</label>
+      <select formControlName="cuisineType" class="input border border-gray-300">
+        <option [ngValue]="null">–</option>
+        <option *ngFor="let c of cuisineTypes" [value]="c">{{ c }}</option>
+      </select>
+    </div>
+    <div>
+      <label class="block font-medium mb-1 text-gray-700">Meal type</label>
+      <select formControlName="mealType" class="input border border-gray-300">
+        <option [ngValue]="null">–</option>
+        <option *ngFor="let m of mealTypes" [value]="m">{{ m }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <label class="block font-medium mb-1 text-gray-700">Rating</label>
+    <select formControlName="rating" class="input w-32 border border-gray-300">
+      <option [ngValue]="null">–</option>
+      <option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }} Star{{ r > 1 ? 's' : '' }}</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn-primary w-full md:w-auto mt-4">💾 Save recipe</button>
+</form>
