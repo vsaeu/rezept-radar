@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RecipeService } from '../../services/recipe.service';
 import { Recipe } from '../../models/recipe.model';
@@ -13,10 +13,8 @@ import { CommonModule } from '@angular/common';
 export class RecipeDetail implements OnInit {
   public recipe: Recipe | undefined = undefined;
 
-  constructor(
-    private route: ActivatedRoute,
-    private recipeService: RecipeService
-  ) {}
+  private route = inject(ActivatedRoute);
+  private recipeService = inject(RecipeService);
 
   ngOnInit(): void {
     // get id from route params
