@@ -1,6 +1,7 @@
 export interface Recipe {
     id: number;
     name: string;
+    description?: string; // Optional description
     ingredients: Map<Ingredient, number>; // Map of ingredient to amount
     instructions: string;
     imageUrl?: string; // Optional image URL

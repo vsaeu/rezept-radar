@@ -1,1 +1,89 @@
-<p>recipe-detail works!</p>
+@if (!recipe) {
+  <h2>Recipe not found!</h2>
+} @else {
+  <div>
+    <h2 class="text-3xl">
+      {{ recipe.name }}
+      @if (recipe.rating) {
+        <span>- {{ recipe.rating }} ★</span>
+      }
+    </h2>
+    <div class="mt-5 flex">
+      @if (recipe.imageUrl) {
+        <img [src]="recipe.imageUrl" alt="{{ recipe.name }}" class="h-64 w-120 object-cover rounded-md" />
+      } @else {
+        <div class="flex items-center justify-center h-64 w-120 bg-gray-200 rounded-md">
+          <p class="text-sm text-gray-500">No image available for this recipe.</p>
+        </div>
+      }
+    </div>
+
+    <section class="mt-2 text-sm">
+      @if (recipe.description) {
+        <p>{{ recipe.description }}</p>
+      }
+
+      @if (recipe.dietTypes?.length) {
+        <p>
+          Diet Types:
+          @for (diet of recipe.dietTypes; track diet) {
+            <span>{{ diet }}, </span>
+          }
+        </p>
+      }
+      @if (recipe.cuisineType) {
+        <p>Cuisine Type: {{ recipe.cuisineType }}</p>
+      }
+      @if (recipe.mealType) {
+        <p>Meal Type: {{ recipe.mealType }}</p>
+      }
+
+      <div class="flex flex-col gap-2 mt-2">
+        <div class="flex gap-1">
+          <h3>Portion Size:</h3>
+          <p>{{ recipe.portionSize }}</p>
+        </div>
+        <div class="flex gap-1">
+          <h3>Preparation Time:</h3>
+          <p>{{ recipe.preparationTime }} minutes</p>
+        </div>
+        <div class="flex gap-1">
+          <h3>Cooking Time:</h3>
+          <p>{{ recipe.cookingTime }} minutes</p>
+        </div>
+        <div class="flex gap-1">
+          <h3>Total Time:</h3>
+          <p>{{ recipe.totalTime }} minutes</p>
+        </div>
+      </div>
+    </section>
+
+    <main class="flex gap-2 mt-2">
+      <section class="border rounded-md p-2">
+        <h3 class="text-xl font-semibold">Ingredients:</h3>
+        <ul class="ms-5 text-lg">
+          @for (ingredient of recipe.ingredients | keyvalue; track ingredient.key) {
+            <li class="list-disc">{{ ingredient.key }}: {{ ingredient.value }}</li>
+          }
+        </ul>
+      </section>
+
+      <section class="border rounded-md p-2">
+        <h3 class="text-xl font-semibold">Instructions:</h3>
+        <p class="text-lg">{{ recipe.instructions }}</p>
+      </section>
+    </main>
+
+    @if (recipe.nutritionalInfo) {
+      <section class="mt-2">
+        <h3 class="text-md">Nutritional Information:</h3>
+        <ul class="list-disc ms-5 text-sm">
+          <li>Calories: {{ recipe.nutritionalInfo.calories }}</li>
+          <li>Protein: {{ recipe.nutritionalInfo.protein }} g</li>
+          <li>Carbohydrates: {{ recipe.nutritionalInfo.carbs }} g</li>
+          <li>Fat: {{ recipe.nutritionalInfo.fats }} g</li>
+        </ul>
+      </section>
+    }
+  </div>
+}
