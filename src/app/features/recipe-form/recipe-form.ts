@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, input, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -14,6 +14,7 @@ import {
   DietType,
   Ingredient,
   MealType,
+  Recipe,
 } from '../../models/recipe.model';
 import { RecipeService } from '../../services/recipe.service';
 
@@ -21,15 +22,19 @@ import { RecipeService } from '../../services/recipe.service';
   selector: 'app-recipe-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './recipe-create.html',
-  styleUrl: './recipe-create.css',
+  templateUrl: './recipe-form.html',
+  styleUrl: './recipe-form.css',
 })
-export class RecipeCreate {
+export class RecipeForm implements OnInit {
   private recipeService = inject(RecipeService);
   private router = inject(Router);
+  public recipe = input<Recipe>();
+  public recipeId?: number;
 
   public form: any;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', Validators.required],
       instructions: ['', Validators.required],
@@ -48,6 +53,29 @@ export class RecipeCreate {
       mealType: [''],
       rating: [null],
       ingredients: this.fb.array([]),
+    });
+
+    if (this.recipe()) {
+      this.patchForm(this.recipe()!);
+      this.recipeId = this.recipe()!.id;
+    }
+  }
+
+  patchForm(recipe: Recipe) {
+    this.form.patchValue({
+      ...recipe,
+      ingredients: [], // wird manuell gemacht
+    });
+
+    const ingredientsArray = this.form.get('ingredients') as FormArray;
+    ingredientsArray.clear();
+    recipe.ingredients.forEach((amount, name) => {
+      ingredientsArray.push(
+        this.fb.group({
+          name: [name, Validators.required],
+          amount: [amount, [Validators.required, Validators.min(1)]],
+        })
+      );
     });
   }
 
@@ -88,6 +116,24 @@ export class RecipeCreate {
       totalTime: (raw.preparationTime ?? 0) + (raw.cookingTime ?? 0),
     };
 
+    if (this.recipe()) {
+      this.updateRecipe(recipe);
+    } else {
+      this.addRecipe(recipe);
+    }
+  }
+
+  logRecipes() {
+    setTimeout(() => {
+      this.recipeService.getRecipes().subscribe({
+        next: (allRecipes) => {
+          console.log('Recipes:', allRecipes);
+        },
+      });
+    }, 1000);
+  }
+
+  addRecipe(recipe: Recipe): void {
     this.recipeService.addRecipe(recipe).subscribe({
       next: (newRecipe) => {
         console.log('🎉 Recipe saved:', newRecipe);
@@ -98,12 +144,27 @@ export class RecipeCreate {
         console.error('Error saving recipe:', err);
       },
     });
+  }
 
-    // for testing
-    this.recipeService.getRecipes().subscribe({
-      next: (allRecipes) => {
-        console.log('Recipes:', allRecipes);
-      },
+  updateRecipe(updatedRecipe: Recipe) {
+    console.log('updatedRecipe: ', updatedRecipe);
+    updatedRecipe.id = this.recipeId!;
+    this.recipeService.updateRecipe(updatedRecipe).subscribe(() => {
+      alert('Recipe updated');
+      this.logRecipes();
+      this.router.navigate(['/recipes']);
     });
+  }
+
+  onDelete() {
+    if (this.recipe()) {
+      this.recipeService.deleteRecipe(this.recipe()!.id).subscribe(
+        () => {
+          alert('deleted');
+          this.router.navigate(['/recipes']);
+          this.logRecipes();
+        }
+      );
+    }
   }
 }
