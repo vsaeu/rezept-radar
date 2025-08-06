@@ -1,5 +1,4 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-8 max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl">
-
   <div>
     <label class="block font-medium mb-1 text-gray-700">Recipe name</label>
     <input formControlName="name" class="input border border-gray-300" required />
@@ -17,21 +16,13 @@
           <option *ngFor="let option of ingredientsList" [value]="option">{{ option }}</option>
         </select>
 
-        <input
-          type="number"
-          formControlName="amount"
-          class="input w-24"
-          min="1"
-          placeholder="Amount"
-        />
+        <input type="number" formControlName="amount" class="input w-24" min="1" placeholder="Amount" />
 
         <button type="button" (click)="removeIngredient(i)" class="text-red-600 hover:underline text-sm">Delete</button>
       </div>
     </div>
 
-    <button type="button" (click)="addIngredient()" class="btn-secondary mt-3">
-      + Add ingredient
-    </button>
+    <button type="button" (click)="addIngredient()" class="btn-secondary mt-3">+ Add ingredient</button>
   </div>
 
   <div>
@@ -65,7 +56,12 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <input type="number" formControlName="calories" placeholder="Calories" class="input border border-gray-300" />
       <input type="number" formControlName="protein" placeholder="Protein (g)" class="input border border-gray-300" />
-      <input type="number" formControlName="carbs" placeholder="Carbohydrates (g)" class="input border border-gray-300" />
+      <input
+        type="number"
+        formControlName="carbs"
+        placeholder="Carbohydrates (g)"
+        class="input border border-gray-300"
+      />
       <input type="number" formControlName="fats" placeholder="Fat (g)" class="input border border-gray-300" />
     </div>
   </fieldset>
@@ -97,17 +93,28 @@
     <label class="block font-medium mb-1 text-gray-700">Rating</label>
     <select formControlName="rating" class="input w-32 border border-gray-300">
       <option [ngValue]="null">–</option>
-      <option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }} Star{{ r > 1 ? 's' : '' }}</option>
+      <option *ngFor="let r of [1, 2, 3, 4, 5]" [value]="r">{{ r }} Star{{ r > 1 ? 's' : '' }}</option>
     </select>
   </div>
   <div class="flex flex-col md:flex-row justify-between gap-4 mt-6">
-    
-    @if(recipe()){
-      <button type="submit" class="btn-primary w-full md:w-auto mt-4">💾 Udate recipe</button>
-      <button type="button" (click)="onDelete()" class="btn-error w-full md:w-auto">🗑️ Delete recipe</button>
-    }
-    @else{
-      <button type="submit" class="btn-primary w-full md:w-auto">💾 Save recipe</button>
+    @if (recipe()) {
+      <button
+        type="submit"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full md:w-auto mt-4 py-2 px-4 rounded cursor-pointer"
+      >
+        💾 Update recipe
+      </button>
+      <button
+        type="button"
+        (click)="onDelete()"
+        class="bg-red-500 hover:bg-red-700 text-white font-bold w-full md:w-auto mt-4 py-2 px-4 rounded cursor-pointer"
+      >
+        🗑️ Delete recipe
+      </button>
+    } @else {
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+        💾 Save recipe
+      </button>
     }
   </div>
 </form>
