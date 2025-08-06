@@ -1,7 +1,7 @@
 @if (!recipe) {
   <h2>Recipe not found!</h2>
 } @else {
-  <div class="space-y-8 max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl">
+  <div>
     <h2 class="text-3xl">
       {{ recipe.name }}
       @if (recipe.rating) {
@@ -85,21 +85,5 @@
         </ul>
       </section>
     }
-    <div class="flex flex-col md:flex-row justify-between mt-6 gap-4">
-      <button
-        type="buton"
-        (click)="onEdit()"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full md:w-auto mt-4 py-2 px-4 rounded cursor-pointer"
-      >
-        ✏️ Edit Recipe
-      </button>
-      <button
-        type="button"
-        (click)="onDelete()"
-        class="bg-red-500 hover:bg-red-700 text-white font-bold w-full md:w-auto mt-4 py-2 px-4 rounded cursor-pointer"
-      >
-        🗑️ Delete Recipe
-      </button>
-    </div>
   </div>
 }

@@ -1,9 +1,21 @@
 import { Component, computed, inject, input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { CuisineType, DietType, Ingredient, MealType, Recipe } from '../../models/recipe.model';
+import {
+  CuisineType,
+  DietType,
+  Ingredient,
+  MealType,
+  Recipe,
+} from '../../models/recipe.model';
 import { RecipeService } from '../../services/recipe.service';
 
 @Component({
@@ -67,7 +79,9 @@ export class RecipeForm implements OnInit {
     });
   }
 
-  readonly ingredientsArray = computed(() => this.form.get('ingredients') as FormArray<FormGroup>);
+  readonly ingredientsArray = computed(
+    () => this.form.get('ingredients') as FormArray<FormGroup>
+  );
 
   readonly ingredientsList = Object.values(Ingredient);
   readonly dietTypes = Object.values(DietType);
@@ -122,8 +136,9 @@ export class RecipeForm implements OnInit {
   addRecipe(recipe: Recipe): void {
     this.recipeService.addRecipe(recipe).subscribe({
       next: (newRecipe) => {
+        console.log('🎉 Recipe saved:', newRecipe);
         this.form.reset();
-        this.router.navigate(['/recipes', newRecipe.id]);
+        this.router.navigate(['/recipes']);
       },
       error: (err) => {
         console.error('Error saving recipe:', err);
@@ -135,15 +150,21 @@ export class RecipeForm implements OnInit {
     console.log('updatedRecipe: ', updatedRecipe);
     updatedRecipe.id = this.recipeId!;
     this.recipeService.updateRecipe(updatedRecipe).subscribe(() => {
-      this.router.navigate(['/recipes', updatedRecipe.id]);
+      alert('Recipe updated');
+      this.logRecipes();
+      this.router.navigate(['/recipes']);
     });
   }
 
   onDelete() {
     if (this.recipe()) {
-      this.recipeService.deleteRecipe(this.recipe()!.id).subscribe(() => {
-        this.router.navigate(['/recipes']);
-      });
+      this.recipeService.deleteRecipe(this.recipe()!.id).subscribe(
+        () => {
+          alert('deleted');
+          this.router.navigate(['/recipes']);
+          this.logRecipes();
+        }
+      );
     }
   }
 }
